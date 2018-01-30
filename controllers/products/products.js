@@ -5,39 +5,39 @@ const Product = require('../../models/schemas/products');
 const Variant = require('../../models/schemas/variants');
 
 router.create_product = (req, res, next) => {
-    console.log(req.body);
     const name = req.body.name;
     const imagePath = req.body.path;
     const description = req.body.description;
     const price = req.body.price;
     const available_quantity = req.body.quantity;
     const status = req.body.status;
+
     const variant_name = req.body.variantName;
     const variant_price = req.body.variantPrice;
     const variant_status = req.body.variantStatus;
+    const variant_image_path = req.body.variantImagePath;
 
     const product = {name, imagePath, description, price, available_quantity, status};
     const newProduct = new Product(product);
 
-    const variant = {prod_id: newProduct._id, variant_name, variant_price, variant_status};
+    const variant = {prod_id: newProduct._id, variant_name, variant_price, variant_status, variant_image_path};
     const newVariant = new Variant(variant);
-    // newVariant
 
     newProduct.save()
         .then(prod => {
-            newVariant.save()
-                .then(variant => {
-                    // console.log(variant);
-                    // return res.json(variant);
-                })
-                .catch(err => console.log(err))
-            // console.log(prod);
+            if (variant_name !== undefined || variant_image_path !== undefined || variant_price !== undefined || variant_status !== undefined) {
+                newVariant.save()
+                    .then(variant => {
+                    })
+                    .catch(err => console.log(err))
+            }
             return res.json(prod);
         })
         .catch(err => console.log(err))
 };
 
 router.get_all_products = (req, res) => {
+    console.log(localStorage.getItem('userId'))
     // Variant.find({}).exec((eror, variants) => {
     //     if(eror) throw eror;
     //
@@ -50,7 +50,7 @@ router.get_all_products = (req, res) => {
         if (err) throw err;
         // console.log(products)
         Variant.find({}).exec((eror, variants) => {
-            if(eror) throw eror;
+            if (eror) throw eror;
             Product.count().then(count => {
                 // const token = jwt.sign({products: products, countOfUsers: count}, 'secret_key');
                 res.status(200).json({
@@ -119,8 +119,12 @@ router.delete_product = (req, res) => {
     Product.findOne({_id: id})
         .then(product => {
             if (product) {
+                Variant.remove({prod_id: id}).then(() => console.log('variant is deleted'));
                 Product.remove({_id: id})
-                    .then(() => res.status(200).json({message: `${product.name} is deleted`}))
+                    .then(() => {
+                        res.status(200).json({message: `${product.name} is deleted`});
+                    });
+
             }
         })
         .catch(err => console.log(err))

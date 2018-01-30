@@ -55,7 +55,7 @@ router.sign_in = (req, res) => {
             }
             if (user && bcrypt.compareSync(password, user.password)) {
                 req.session.userId = user._id;
-                localStorage.setItem('userId', user._id)
+                localStorage.setItem('userId', user._id);
 
                 const token = jwt.sign({
                     email: user.email,

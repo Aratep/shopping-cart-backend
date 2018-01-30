@@ -7,6 +7,9 @@ const VariantsSchema = new Schema({
     variant_name: {
         type: String,
     },
+    variant_image_path: {
+        type: String,
+    },
     variant_price: {
         type: Number,
     },

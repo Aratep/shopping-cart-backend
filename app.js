@@ -11,6 +11,7 @@ const index = require('./routes/index');
 const products = require('./routes/products/index');
 const admin = require('./routes/admin/index');
 const users = require('./routes/users/index');
+const cart = require('./routes/cart/index');
 const accessControl = require('./middlewares/accessControl');
 
 const app = express();
@@ -47,6 +48,7 @@ app.use('/', index);
 app.use('/users', users);
 app.use('/products', products);
 app.use('/admin', admin);
+app.use('/cart', cart);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

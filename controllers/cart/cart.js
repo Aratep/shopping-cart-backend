@@ -14,39 +14,30 @@ router.add_to_cart = (req, res, next) => {
 
     newToCart.save()
         .then(cart => {
-            return res.json(cart);
+            res.status(200).json({cart});
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+            for (let i in err.errors) {
+                return res.status(400).send({
+                    message: err.errors[i].message
+                });
+            }
+        })
 };
 
 router.get_cart_list = (req, res) => {
-    console.log(req.body);
     const user_id = req.body.user_id;
 
     Cart.find({user_id: user_id}).exec((err, ids) => {
         if (err) throw err;
-        console.log(ids)
-        res.status(200).json({ids})
-    })
-    // Product.find({}).exec((err, products) => {
-    //     if (err) throw err;
-    //     // console.log(products)
-    //     Variant.find({}).exec((eror, variants) => {
-    //         if (eror) throw eror;
-    //         Product.count().then(count => {
-    //             // const token = jwt.sign({products: products, countOfUsers: count}, 'secret_key');
-    //             res.status(200).json({
-    //                 products,
-    //                 variants,
-    //                 count
-    //             })
-    //         })
-    //
-    //         // const prodIds = variants.map(c => c.prod_id);
-    //         // console.log(prodIds);
-    //     })
-    // })
+        const prodIds = ids.map(c => c.prod_id);
+        Product.find({_id: { $in: prodIds }}).exec((error, userProduct) => {
+            if(error) throw err;
 
+            console.log(userProduct)
+            res.status(200).json({userProduct});
+        })
+    })
 };
 
 

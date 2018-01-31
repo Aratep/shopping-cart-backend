@@ -6,7 +6,7 @@ const Schema = db.Schema;
 const CartSchema = new Schema({
     prod_id: {
         type: String,
-        unique: true
+        // unique: true
     },
     user_id: {
         type: String,

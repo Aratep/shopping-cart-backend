@@ -3,6 +3,7 @@ const router = express.Router();
 
 const Product = require('../../models/schemas/products');
 const Variant = require('../../models/schemas/variants');
+const generateToken = require('../../lib/helperFunctions');
 
 router.create_product = (req, res, next) => {
     console.log(req.body);
@@ -130,6 +131,12 @@ router.delete_product = (req, res) => {
         })
         .catch(err => console.log(err))
 };
+
+router.generate_token = (req, res) => {
+    const token = generateToken();
+    res.json({token})
+}
+
 
 
 module.exports = router;

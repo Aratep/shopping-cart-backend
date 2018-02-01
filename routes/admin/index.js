@@ -3,8 +3,7 @@ const router = express.Router();
 
 const admin = require('../../controllers/admin/login');
 
-/* GET home page. */
-router.post('/login', admin.login);
 router.post('/register', admin.register);
+router.post('/login', admin.login);
 
 module.exports = router;

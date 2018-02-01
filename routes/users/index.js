@@ -12,6 +12,7 @@ router.put('/reset_password', users.reset_password);
 router.use(function(req, res, next) {
     // check header or url parameters or post parameters for token
     const token = req.body.token || req.query.token || req.headers['x-access-token'];
+    console.log(token)
     if (token) {
         // verifies secret and checks exp
         jwt.verify(token, 'secret_key', (err, decoded) => {
@@ -40,7 +41,7 @@ router.use(function(req, res, next) {
 router.post('/sign_in', users.sign_in);
 router.put('/edit_user', users.edit_user);
 router.delete('/delete_single_user', users.delete_single_user);
-router.get('/list_all_users', users.get_all_users);
+router.get('/all-users', users.get_all_users);
 
 
 

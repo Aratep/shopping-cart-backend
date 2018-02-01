@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 
 const Product = require('../../models/schemas/products');
 // const Variant = require('../../models/schemas/variants');
@@ -8,9 +10,11 @@ const Cart = require('../../models/schemas/cart');
 router.add_to_cart = (req, res, next) => {
     const prod_id = req.body.prod_id;
     const user_id = req.body.user_id;
+    let i = ObjectId();
 
-    const toCart = {prod_id, user_id};
+    const toCart = {_id: i, prod_id, user_id};
     const newToCart = new Cart(toCart);
+    console.log(newToCart);
 
     newToCart.save()
         .then(cart => {
@@ -18,6 +22,7 @@ router.add_to_cart = (req, res, next) => {
         })
         .catch(err => {
             for (let i in err.errors) {
+                console.log(err.errors[i].message)
                 return res.status(400).send({
                     message: err.errors[i].message
                 });

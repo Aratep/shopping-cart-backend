@@ -5,6 +5,7 @@ const Product = require('../../models/schemas/products');
 const Variant = require('../../models/schemas/variants');
 
 router.create_product = (req, res, next) => {
+    console.log(req.body);
     const name = req.body.name;
     const imagePath = req.body.path;
     const description = req.body.description;

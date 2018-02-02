@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 
 const Product = require('../../models/schemas/products');
-// const Variant = require('../../models/schemas/variants');
 const Cart = require('../../models/schemas/cart');
 
 router.add_to_cart = (req, res, next) => {
@@ -88,7 +87,6 @@ router.delete_from_cart = (req, res) => {
 
     Cart.find({$and: [{'prod_id': prodId}, {'user_id': userId}]})
         .then(product => {
-            console.log(product)
             if (product) {
                 Cart.remove({$and: [{'prod_id': prodId}, {'user_id': userId}]})
                     .then(() => console.log('user product is deleted'));

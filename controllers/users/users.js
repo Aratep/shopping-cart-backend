@@ -16,12 +16,9 @@ router.register = (req, res, next) => {
     const username = req.body.username_reg;
     const email = req.body.email_reg;
     const password = req.body.password_reg_confirm;
-    const userToRegister = {
-        username, email, password
-    };
+    const userToRegister = {username, email, password};
     const newUser = new User(userToRegister);
     newUser.password = bcrypt.hashSync(password, 10);
-    console.log(req.body);
 
     newUser.save()
         .then((user) => {
@@ -41,7 +38,6 @@ router.sign_in = (req, res) => {
     const username = req.body.username;
     const email = req.body.username;
     const password = req.body.password;
-    console.log(req.body);
 
     User.findOne({$or: [{'email': email}, {'username': username}]})
         .then(user => {

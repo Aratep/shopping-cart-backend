@@ -10,6 +10,9 @@ const CartSchema = new Schema({
     },
     user_id: {
         type: String,
+    },
+    id: {
+        type: Number
     }
 });
 

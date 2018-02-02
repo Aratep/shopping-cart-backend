@@ -3,21 +3,21 @@ const router = express.Router();
 
 const Product = require('../../models/schemas/products');
 const Variant = require('../../models/schemas/variants');
-const generateToken = require('../../lib/helperFunctions');
+const Cart = require('../../models/schemas/cart');
 
 router.create_product = (req, res, next) => {
     console.log(req.body);
-    const name = req.body.name;
-    const imagePath = req.body.path;
-    const description = req.body.description;
-    const price = req.body.price;
-    const available_quantity = req.body.quantity;
-    const status = req.body.status;
+    const name = req.body.values.name;
+    const imagePath = req.body.values.path;
+    const description = req.body.values.description;
+    const price = req.body.values.price;
+    const available_quantity = req.body.values.quantity;
+    const status = req.body.values.status;
 
-    const variant_name = req.body.variantName;
-    const variant_price = req.body.variantPrice;
-    const variant_status = req.body.variantStatus;
-    const variant_image_path = req.body.variantImagePath;
+    const variant_name = req.body.values.variantName;
+    const variant_price = req.body.values.variantPrice;
+    const variant_status = req.body.values.variantStatus;
+    const variant_image_path = req.body.values.variantImagePath;
 
     const product = {name, imagePath, description, price, available_quantity, status};
     const newProduct = new Product(product);
@@ -39,14 +39,6 @@ router.create_product = (req, res, next) => {
 };
 
 router.get_all_products = (req, res) => {
-    console.log(localStorage.getItem('userId'))
-    // Variant.find({}).exec((eror, variants) => {
-    //     if(eror) throw eror;
-    //
-    //     const prodIds = variants.map(c => c.prod_id);
-    //     console.log(prodIds);
-    // })
-    // const prodIds = variants.map(function(c) { return c.prod_id; });
 
     Product.find({}).exec((err, products) => {
         if (err) throw err;
@@ -76,6 +68,24 @@ router.get_all_products = (req, res) => {
 
 };
 
+router.add_new_variant = (req, res, next) => {
+    console.log(req.body);
+
+    const variant_name = req.body.values.variantName;
+    const variant_price = req.body.values.variantPrice;
+    const variant_status = req.body.values.variantStatus;
+    const variant_image_path = req.body.values.variantImagePath;
+
+    const variant = {prod_id: newProduct._id, variant_name, variant_price, variant_status, variant_image_path};
+    const newVariant = new Variant(variant);
+
+    newVariant.save()
+        .then(variant => {
+            console.log(variant);
+            res.status(200).json({variants})
+        })
+        .catch(err => console.log(err))
+}
 
 router.update_product = (req, res, next) => {
     const name = req.body.values.name;
@@ -117,7 +127,7 @@ router.update_product = (req, res, next) => {
 
 router.delete_product = (req, res) => {
     const id = req.body.id;
-
+    console.log(id);
     Product.findOne({_id: id})
         .then(product => {
             if (product) {
@@ -126,17 +136,11 @@ router.delete_product = (req, res) => {
                     .then(() => {
                         res.status(200).json({message: `${product.name} is deleted`});
                     });
-
+                Cart.remove({prod_id: id}).then(() => console.log('variant is deleted'));
             }
         })
         .catch(err => console.log(err))
 };
-
-router.generate_token = (req, res) => {
-    const token = generateToken();
-    res.json({token})
-}
-
 
 
 module.exports = router;

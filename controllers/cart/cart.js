@@ -10,9 +10,9 @@ const Cart = require('../../models/schemas/cart');
 router.add_to_cart = (req, res, next) => {
     const prod_id = req.body.prod_id;
     const user_id = req.body.user_id;
-    let i = ObjectId();
+    let i = 0;
 
-    const toCart = {_id: i, prod_id, user_id};
+    const toCart = {prod_id, user_id, id: i};
     const newToCart = new Cart(toCart);
     console.log(newToCart);
 
